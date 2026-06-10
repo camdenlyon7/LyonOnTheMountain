@@ -204,17 +204,19 @@
             document.getElementById('route-name').innerText = "No Route Specified";
         } else {
             // 2. Query your new backend endpoint for this specific pin's data
-            fetch(`http://localhost:3000/api/pins/${routeId}`)
-                .then(res => res.json())
-                .then(data => {
-                // 1. Inject Banner Headline
+        fetch(`/api/pins/${routeId}`) // 🌟 Cleaned to a relative path!
+            .then(res => res.json())
+            .then(data => {
+                // 1. Inject Banner Headline & Date
                 document.getElementById('route-name').innerText = data.name;
-                if (data.report_file) {
-                const imageName = data.report_file.replace('.md', '.jpeg');
-                document.querySelector('.hero-banner').style.backgroundImage = 
-                    `linear-gradient(rgba(15, 23, 42, 0.2), rgba(15, 23, 42, 0.35)), url('http://localhost:3000/reports/${imageName}')`;
-                document.querySelector('.hero-banner').style.backgroundSize = 'cover';
-                document.querySelector('.hero-banner').style.backgroundPosition = 'center 56.5%';
+                
+                if (data.date_completed) {
+                    const parsedDate = new Date(data.date_completed + 'T00:00:00');
+                    document.getElementById('stat-date').innerText = parsedDate.toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'long', day: 'numeric'
+                    });
+                } else {
+                    document.getElementById('stat-date').innerText = 'Date Unknown';
                 }
 
                 // 2. Format and Populate the Float Box Metrics safely
@@ -232,8 +234,7 @@
                 // Aesthetics metrics
                 document.getElementById('stat-beauty').innerText = `${data.beauty_score || 0}/10`;
                 document.getElementById('stat-wilderness').innerText = `${data.wilderness_score || 0}/10`;
-                document.getElementById('stat-character').innerText = `${data.character_score || 0}/10`;   
-                
+                document.getElementById('stat-character').innerText = `${data.character_score || 0}/10`;                
                 const summitsContainer = document.getElementById('summits-container');
                 const tableBody = document.getElementById('summits-table-body');
 
@@ -258,7 +259,7 @@
 
                 if (data.report_file) {
                     const folderName = data.report_file;
-                    const folderUrl = `http://localhost:3000/reports/${folderName}`;
+                    const folderUrl = `reports/${data.report_file}`;
                     const imageName = `${data.report_file}.jpeg`;
                     
                     // 1. Set the background instantly (Guarantees it will never be blank)

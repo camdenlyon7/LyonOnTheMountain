@@ -22,7 +22,9 @@ app.use((req, res, next) => {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
+app.use(express.static('.'));
 app.use('/reports', express.static(path.join(__dirname, 'reports')));
+app.use('/about-images', express.static(path.join(__dirname, 'about-images')));
 
 // GET endpoint to fetch all adventure pins formatted as clean GeoJSON
 app.get('/api/pins', async (req, res) => {
