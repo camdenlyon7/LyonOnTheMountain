@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Report | Lyon on the Mountain</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f9f9f9; color: #333;
+        }
+        /* 2. Top Header Navigation Bar */
+        .header {
+            height: 60px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .header h1 span {
+            color: #e65c00; /* Match your Outdoor Orange pin accent */
+        }
+
+        .nav-links a {
+            color: #cccccc;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #e65c00;
+        }
+        .container {
+            max-width: 800px; margin: 40px auto;
+            background: #ffffff; padding: 40px;
+            border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .meta-strip {
+            display: flex; gap: 20px; flex-wrap: wrap;
+            background: #f1f5f9; padding: 15px;
+            border-radius: 6px; margin-bottom: 30px; font-size: 0.95rem;
+        }
+        /* Style compiled markdown content natively */
+        #report-body h1, #report-body h2, #report-body h3 { color: #1a1a1a; margin-top: 1.5em; }
+        #report-body p { line-height: 1.7; font-size: 1.1rem; color: #444; }
+        #report-body li { line-height: 1.6; margin-bottom: 8px; font-size: 1.1rem; }
+
+        .hero-banner {
+            position: relative;
+            height: 320px;
+            background-image: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .hero-title-group {
+            max-width: 55%;
+        }
+
+        .hero-title-group h1 {
+            font-size: 2.6rem; 
+            margin: 0; 
+            font-weight: 800;
+            letter-spacing: -0.5px; 
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        /* 📊 Floating Stats Box Panel (Right Side Alignment) */
+        .stats-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            width: 280px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .stats-row {
+            display: flex; 
+            justify-content: space-between;
+            padding: 6px 0; 
+            font-size: 0.95rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-row:last-child { 
+            border-bottom: none; 
+        }
+
+        .stats-label { 
+            color: #cbd5e1; 
+            font-weight: 500; 
+        }
+
+        .stats-value { 
+            font-weight: 700; 
+            color: #ffffff; 
+        }
+
+        /* Keeps the logo matching your branding styles without blue text or underlines */
+        .logo-link {
+            text-decoration: none;
+            color: inherit; /* Tells the link to inherit the default white header color */
+            display: inline-block;
+        }
+
+        .logo-link:hover h1 span {
+            /* Optional effect: makes your orange accent pop a bit more when hovered */
+            text-shadow: 0 0 10px rgba(230, 92, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="index.html" class="logo-link">
+        <h1>Lyon<span>on</span>the<span>Mountain</span></h1>
+        </a>
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="#">New Trips</a>
+        <a href="#">International Trips</a>
+        <a href="#">Canyoneering</a>
+        <a href="about.html">About</a>    </nav>
+    </header>
+
+    <section class="hero-banner">
+    <div class="hero-title-group">
+        <h1 id="route-name">Loading Adventure...</h1>
+        <span id="stat-date" style="display: block; font-size: 1rem; color: #cbd5e1; font-weight: 500; font-style: italic; opacity: 0.9;">--</span>
+    </div>
+
+    <div class="stats-card">
+        <div class="stats-row"><span class="stats-label">Technical Grade</span><span class="stats-value" id="stat-grade">--</span></div>
+        <div class="stats-row"><span class="stats-label">Distance</span><span class="stats-value" id="stat-distance">--</span></div>
+        <div class="stats-row"><span class="stats-label">Vertical Gain</span><span class="stats-value" id="stat-gain">--</span></div>
+        <div class="stats-row"><span class="stats-label">Est. Duration</span><span class="stats-value" id="stat-time">--</span></div>
+        <div class="stats-row"><span class="stats-label">Beauty</span><span class="stats-value" id="stat-beauty">--</span></div>
+        <div class="stats-row"><span class="stats-label">Character</span><span class="stats-value" id="stat-character">--</span></div>
+        <div class="stats-row"><span class="stats-label">Wildness</span><span class="stats-value" id="stat-wilderness">--</span></div>
+    </div>
+</section>
+
+    <main class="container">
+        <main class="content-workspace">
+
+            <div id="summits-container" style="display:none; margin-bottom: 40px;">
+                <h3 style="color: #0f172a; margin-bottom: 12px; font-size: 1.4rem;">Summits</h3>
+                <table style="width: 100%; border-collapse: collapse; text-align: left; background: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <thead>
+                        <tr style="background: #f1f5f9; color: #475569; font-weight: 600; font-size: 0.9rem;">
+                            <th style="padding: 12px 16px;">Peak</th>
+                            <th style="padding: 12px 16px;">Elevation</th>
+                            <th style="padding: 12px 16px;">Prominence</th>
+                        </tr>
+                    </thead>
+                    <tbody id="summits-table-body">
+                        </tbody>
+                </table>
+            </div>
+
+            <article id="report-body">
+                <p style="color: #64748b; font-style: italic;">Trip Report Coming Soon...</p>
+            </article>
+
+            <section id="gallery-container" style="display: none; margin-top: 60px; border-top: 1px solid #e2e8f0; padding-top: 40px;">
+                <h3 style="color: #0f172a; margin-bottom: 24px; font-size: 1.4rem;">Gallery</h3>
+                
+            <div id="gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); grid-auto-flow: dense; gap: 20px;">                    </div>
+            </section>
+        </main>
+    </main>
+
+    <script>
+        // 1. Snatch the ID parameter out of the active browser address bar
+        const urlParams = new URLSearchParams(window.location.search);
+        const routeId = urlParams.get('id');
+
+        if (!routeId) {
+            document.getElementById('route-name').innerText = "No Route Specified";
+        } else {
+            // 2. Query your new backend endpoint for this specific pin's data
+            fetch(`http://localhost:3000/api/pins/${routeId}`)
+                .then(res => res.json())
+                .then(data => {
+                // 1. Inject Banner Headline
+                document.getElementById('route-name').innerText = data.name;
+                if (data.report_file) {
+                const imageName = data.report_file.replace('.md', '.jpeg');
+                document.querySelector('.hero-banner').style.backgroundImage = 
+                    `linear-gradient(rgba(15, 23, 42, 0.2), rgba(15, 23, 42, 0.35)), url('http://localhost:3000/reports/${imageName}')`;
+                document.querySelector('.hero-banner').style.backgroundSize = 'cover';
+                document.querySelector('.hero-banner').style.backgroundPosition = 'center 56.5%';
+                }
+
+                // 2. Format and Populate the Float Box Metrics safely
+                document.getElementById('stat-distance').innerText = data.distance_miles ? `${data.distance_miles} mi` : 'N/A';
+                document.getElementById('stat-gain').innerText = data.elevation_gain_ft ? `${data.elevation_gain_ft.toLocaleString()} ft` : 'N/A';
+                document.getElementById('stat-time').innerText = data.min_duration_hours && data.max_duration_hours ? `${data.min_duration_hours}-${data.max_duration_hours} hrs` : 'N/A';
+
+                // Handle technical difficulty translation
+                let bannerGrade = `Class ${data.climbing_class}`;
+                if (data.climbing_class === 5 || data.route_type === 'canyon') {
+                    bannerGrade = data.yds_grade;
+                }
+                document.getElementById('stat-grade').innerText = bannerGrade;
+
+                // Aesthetics metrics
+                document.getElementById('stat-beauty').innerText = `${data.beauty_score || 0}/10`;
+                document.getElementById('stat-wilderness').innerText = `${data.wilderness_score || 0}/10`;
+                document.getElementById('stat-character').innerText = `${data.character_score || 0}/10`;   
+                
+                const summitsContainer = document.getElementById('summits-container');
+                const tableBody = document.getElementById('summits-table-body');
+
+                // If a summit file exists, fetch it
+                if (data.summits && data.summits.length > 0) {
+                    tableBody.innerHTML = ''; 
+                    data.summits.forEach(peak => {
+                        const row = document.createElement('tr');
+                        row.style.borderBottom = '1px solid #f1f5f9';
+                        row.style.fontSize = '0.95rem';
+                        row.innerHTML = `
+                            <td style="padding: 12px 16px; font-weight: 600; color: #1e293b;">${peak.name}</td>
+                            <td style="padding: 12px 16px; color: #334155;">${peak.elevation?.toLocaleString()} ft</td>
+                            <td style="padding: 12px 16px; color: #334155;">${peak.prominence?.toLocaleString()} ft</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                    summitsContainer.style.display = 'block';
+                } else {
+                    summitsContainer.style.display = 'none';
+                }
+
+                if (data.report_file) {
+                    const folderName = data.report_file;
+                    const folderUrl = `http://localhost:3000/reports/${folderName}`;
+                    const imageName = `${data.report_file}.jpeg`;
+                    
+                    // 1. Set the background instantly (Guarantees it will never be blank)
+                    const banner = document.querySelector('.hero-banner');
+                    banner.style.backgroundImage = `linear-gradient(rgba(15, 23, 42, 0.20), rgba(15, 23, 42, 0.35)), url('${folderUrl}/${imageName}')`;
+                    banner.style.backgroundSize = 'cover';
+                    banner.style.backgroundPosition = 'center 40%'; // Default fallback
+
+                    // 2. Fetch Main Markdown text body
+                    fetch(`${folderUrl}/${data.report_file}.md`)
+                        .then(response => response.text())
+                        .then(markdownText => {
+                            document.getElementById('report-body').innerHTML = marked.parse(markdownText);
+                        });
+
+                    // 3. Dynamic Manifest Fetch (Handles both images AND custom crop position!)
+                    fetch(`${folderUrl}/gallery-manifest.json`)
+                        .then(response => {
+                            if (!response.ok) throw new Error("No manifest");
+                            return response.json();
+                        })
+                        .then(manifest => {
+                            // A. Update the banner position dynamically if specified in the JSON!
+                            if (manifest.bannerPosition) {
+                                banner.style.backgroundPosition = manifest.bannerPosition;
+                            }
+
+                            // B. Grab the images array from the object
+                            const imagesArray = manifest.images || [];
+                            const galleryGrid = document.getElementById('gallery-grid');
+                            galleryGrid.innerHTML = '';
+
+                            imagesArray.forEach(photo => {
+                                const card = document.createElement('div');
+                                card.style.background = '#ffffff';
+                                card.style.borderRadius = '8px';
+                                card.style.overflow = 'hidden';
+                                card.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+                                card.style.border = '1px solid #e2e8f0';
+
+                                const img = new Image();
+                                img.src = `${folderUrl}/${photo.file}`;
+                                img.alt = photo.caption;
+                                img.style.width = '100%';
+                                img.style.height = 'auto';
+                                img.style.display = 'block';
+
+                                img.onload = function() {
+                                    if (this.naturalWidth > this.naturalHeight) {
+                                        card.style.gridColumn = 'span 2';
+                                    }
+                                };
+
+                                card.appendChild(img);
+
+                                const caption = document.createElement('p');
+                                caption.style.margin = '0';
+                                caption.style.padding = '12px';
+                                caption.style.fontSize = '0.9rem';
+                                caption.style.color = '#475569';
+                                caption.style.lineHeight = '1.4';
+                                caption.style.fontStyle = 'italic';
+                                caption.innerText = photo.caption;
+                                
+                                card.appendChild(caption);
+                                galleryGrid.appendChild(card);
+                            });
+
+                            document.getElementById('gallery-container').style.display = 'block';
+                        })
+                        .catch(err => console.log("Gallery/Positioning status:", err.message));
+                }
+
+
+                // Date
+                if (data.date_completed) {
+                const parsedDate = new Date(data.date_completed + 'T00:00:00');
+                document.getElementById('stat-date').innerText = parsedDate.toLocaleDateString('en-US', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+                } else {
+                    document.getElementById('stat-date').innerText = 'Date Unknown';
+                }
+            });
+    }
+    </script>
+</body>
+</html>
